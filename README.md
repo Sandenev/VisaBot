@@ -11,3 +11,5 @@ All other vars you can get from googleSheets.
 
 Create a table like in the example pic and go to the script section. Insert code and deploy it as a new webApp. 
 Do not forget to allow anyone use this app and allow this app access to sheets. Names of your table sheets must be in english 
+
+In old version we have the same bot but without buttons. Users need to type some key words to get respond from bot
