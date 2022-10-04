@@ -1,0 +1,46 @@
+var token = "";
+var telegramUrl = "https://api.telegram.org/bot" + token;
+var webAppUrl = "";
+
+
+function setWebhook() {
+var url = telegramUrl + "/setWebhook?url=" + webAppUrl;
+var response = UrlFetchApp.fetch(url);
+}
+
+function sendMessage(id,text) {
+var url = telegramUrl + "/sendMessage?chat_id=" + id + "&text="+ text;
+var response = UrlFetchApp.fetch(url);
+}
+
+function doPost(e) {
+var contents = JSON.parse(e.postData.contents);
+var id = contents.message.from.id;
+var bot = contents.message.from.is_bot;
+var username = contents.message.from.username;
+var name = contents.message.from.first_name + "\n" + contents.message.from.last_name;
+var text = contents.message.text;
+
+var ssId = "";
+var sheet = SpreadsheetApp.openById(ssId).getSheetByName("Sheet1");
+var dateNow = new Date;
+var reformatedDate = dateNow.getMonth() + 1 + "/" + dateNow.getDate();
+  
+
+if (text == "ТУРИСТ") {
+  var turist = sheet.getDataRange().getCell(1, 3).getValue();
+  return sendMessage(id, turist);
+} else if (text == "БИЗНЕС") {
+  var business = sheet.getDataRange().getCell(2, 3).getValue();
+  return sendMessage(id, business);
+} else {
+  if (text.indexOf("_") !== -1) {
+  var dateNow = new Date;
+  var reformatedDate = dateNow.getMonth() + 1 + "/" + dateNow.getDate();
+  sheet.appendRow([reformatedDate, bot, username, name, id, text]);
+  return sendMessage(id, "OK, ваш комментарий записан");
+  } else {
+  return sendMessage(id, "Для получения анкеты пожалуйста наберите ТУРИСТ или БИЗНЕС капсом. Если вы хотите оставить сообщение, пожалуйста начните свой текст с нижнего подчеркивания");
+  }
+}
+}
